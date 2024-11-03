@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "user-service", url = "${app.services.profile}")
 public interface UserProfileClient {
-     @PostMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
+     @PostMapping(value = "/internal/users", produces = MediaType.APPLICATION_JSON_VALUE)
      UserProfileResponse createUserProfile(@RequestBody UserProfileCreateRequest request);
 
 }
