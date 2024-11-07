@@ -14,9 +14,8 @@
         <module name="search-service" />
         <module name="order-service" />
         <module name="admin-service" />
-        <module name="notification-service" />
       </profile>
-      <profile name="Annotation profile for api-gateway" enabled="true">
+      <profile name="Annotation profile for notification-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -30,8 +29,9 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
         </processorPath>
         <module name="api-gateway" />
-        <module name="identity-service" />
         <module name="user-service" />
+        <module name="identity-service" />
+        <module name="notification-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -43,7 +43,7 @@
       <module name="cart-service" options="-parameters" />
       <module name="identity-service" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="inventory-service" options="-parameters" />
-      <module name="notification-service" options="-parameters" />
+      <module name="notification-service" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="order-service" options="-parameters" />
       <module name="payment-service" options="-parameters" />
       <module name="search-service" options="-parameters" />

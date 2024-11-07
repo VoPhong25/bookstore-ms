@@ -1,9 +1,8 @@
-package com.example.identity_service.configuration;
+package com.example.notification_service.configuration;
 
-import com.example.identity_service.dto.request.ApiResponse;
-import com.example.identity_service.exception.ErrorCode;
+import com.example.notification_service.dto.ApiResponse;
+import com.example.notification_service.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;

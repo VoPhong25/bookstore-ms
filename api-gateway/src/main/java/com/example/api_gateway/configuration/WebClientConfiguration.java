@@ -30,7 +30,6 @@ public class WebClientConfiguration {
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
         return new CorsWebFilter(urlBasedCorsConfigurationSource);
-
     }
     @Bean
     IdentityClient identityClient(WebClient webClient){
