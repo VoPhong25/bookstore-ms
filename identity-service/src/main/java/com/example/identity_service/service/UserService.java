@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContext;
@@ -35,7 +36,7 @@ public class UserService {
     ProfileMapper profileMapper;
     PasswordEncoder passwordEncoder;
     UserProfileClient userProfileClient;
-
+    KafkaTemplate<String, String> kafkaTemplate;
     public UserResponse createUser(UserCreatRequest request) {
 
         if (userRepository.existsByUsername(request.getUsername()))
@@ -51,6 +52,7 @@ public class UserService {
         userProfileRequest.setUserId(user.getId());
         userProfileRequest.setPassword(user.getPassword());
         userProfileClient.createUserProfile(userProfileRequest);
+        kafkaTemplate.send("Onboard-sucessful", "Welcome out new user " + user.getUsername());
         return userMapper.toUserResponse(user);
     }
 
