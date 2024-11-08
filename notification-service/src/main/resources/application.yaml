@@ -12,3 +12,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9094
+    consumer:
+      group-id: notification-group  # Định danh nhóm tiêu thụ
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer  # Deserializer cho key
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer  # Deserializer cho value
+      auto-offset-reset: earliest  # Quyết định điểm bắt đầu đọc dữ liệu (earliest hoặc latest)
+      properties:
+        spring.json.trusted.packages: "*"
+notification:
+  email:
+    brevo-url: https://api.brevo.com
+    brevo-apikey: <key>
