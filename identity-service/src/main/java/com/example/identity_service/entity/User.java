@@ -21,9 +21,7 @@ public class User {
     String id;
     String username;
     String password;
-    String firstname;
-    String lastname;
-    LocalDate birthday;
+    String email;
     @ElementCollection
     @CollectionTable(name = "user_roles")
     @Column(name = "role")

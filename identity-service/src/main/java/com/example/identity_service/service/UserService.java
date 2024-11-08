@@ -1,5 +1,6 @@
 package com.example.identity_service.service;
 
+import com.example.event.dto.NotificationEvent;
 import com.example.identity_service.dto.request.UserCreatRequest;
 import com.example.identity_service.dto.request.UserUpdateRequest;
 import com.example.identity_service.dto.response.UserResponse;
@@ -36,7 +37,7 @@ public class UserService {
     ProfileMapper profileMapper;
     PasswordEncoder passwordEncoder;
     UserProfileClient userProfileClient;
-    KafkaTemplate<String, String> kafkaTemplate;
+    KafkaTemplate<String, Object> kafkaTemplate;
     public UserResponse createUser(UserCreatRequest request) {
 
         if (userRepository.existsByUsername(request.getUsername()))
@@ -52,7 +53,15 @@ public class UserService {
         userProfileRequest.setUserId(user.getId());
         userProfileRequest.setPassword(user.getPassword());
         userProfileClient.createUserProfile(userProfileRequest);
-        kafkaTemplate.send("Onboard-sucessful", "Welcome out new user " + user.getUsername());
+
+        NotificationEvent notificationEvent = NotificationEvent.builder()
+                .channel("Email")
+                .recipient(request.getEmail())
+                .subject("Welcome to BookstoreVP")
+                .body("Hello, " + request.getUsername() )
+                .build();
+//      gui mail bang kafka
+        kafkaTemplate.send("notification-delivery", notificationEvent);
         return userMapper.toUserResponse(user);
     }
 
