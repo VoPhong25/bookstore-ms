@@ -90,8 +90,8 @@ public class UserService {
         log.info("in method get User by Id");
         return userMapper.toUserResponse(userRepository.findById(Id).orElseThrow(() -> new RuntimeException("User not found")));
     }
-
     public void deleteUser(String Id) {
         userRepository.deleteById(Id);
     }
+
 }
