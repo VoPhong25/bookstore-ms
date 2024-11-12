@@ -30,13 +30,11 @@ public class BookService {
     BookRepository bookRepository;
     CategoryRepository categoryRepository;
     BookMapper bookMapper;
-    public BookCreateResponse addBook(BookCreateRequest request, MultipartFile file) throws IOException {
-
+    public BookCreateResponse addBook(MultipartFile file, BookCreateRequest request) throws IOException {
         // Tạo đối tượng sách và lưu vào cơ sở dữ liệu
         Book book = bookMapper.toBook(request);
-
-        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(()
-                -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         String imageUrl = saveImage(file);
         book.setImageUrl(imageUrl);
         bookRepository.save(book);

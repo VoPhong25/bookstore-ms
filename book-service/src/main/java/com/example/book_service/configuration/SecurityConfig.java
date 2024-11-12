@@ -23,7 +23,7 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINT= {"/addBook"};
+    private final String[] PUBLIC_ENDPOINT= {"/addBook", "/createCategory"};
     @Value("${jwt.signerKey}")
     String signerKey;
     @Bean

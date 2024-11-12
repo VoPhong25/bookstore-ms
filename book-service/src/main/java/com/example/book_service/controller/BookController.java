@@ -36,7 +36,7 @@ public ApiResponse<BookCreateResponse> addBook(
     BookCreateRequest request = objectMapper.readValue(requestJson, BookCreateRequest.class);
 
     return ApiResponse.<BookCreateResponse>builder()
-            .result(bookService.addBook(request, file))
+            .result(bookService.addBook(file, request))
             .build();
 }
 
