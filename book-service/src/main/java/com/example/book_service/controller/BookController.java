@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,24 +21,30 @@ import java.io.IOException;
 @Slf4j
 public class BookController {
     BookService bookService;
-//    @PostMapping("/addBook")
+
+    //    @PostMapping("/addBook")
 //    ApiResponse<BookCreateResponse> addBook(@RequestParam("file") MultipartFile file,
 //                                               @RequestBody BookCreateRequest request) throws IOException {
 //        return ApiResponse.<BookCreateResponse>builder()
 //               .result(bookService.addBook(request, file))
 //               .build();
 //    }
-@PostMapping(value = "/addBook", consumes = "multipart/form-data")
-public ApiResponse<BookCreateResponse> addBook(
-        @RequestParam("file") MultipartFile file,
-        @RequestParam("request") String requestJson) throws IOException {
-    // Chuyển JSON thành đối tượng BookCreateRequest
-    ObjectMapper objectMapper = new ObjectMapper();
-    BookCreateRequest request = objectMapper.readValue(requestJson, BookCreateRequest.class);
+    @PostMapping(value = "/addBook", consumes = "multipart/form-data")
+    public ApiResponse<BookCreateResponse> addBook(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("request") String requestJson) throws IOException {
+        // Chuyển JSON thành đối tượng BookCreateRequest
+        ObjectMapper objectMapper = new ObjectMapper();
+        BookCreateRequest request = objectMapper.readValue(requestJson, BookCreateRequest.class);
 
-    return ApiResponse.<BookCreateResponse>builder()
-            .result(bookService.addBook(file, request))
-            .build();
-}
-
+        return ApiResponse.<BookCreateResponse>builder()
+                .result(bookService.addBook(file, request))
+                .build();
+    }
+    @GetMapping("/getAllBook")
+     ApiResponse<List<BookCreateResponse>> getAllBook() {
+        return ApiResponse.<List<BookCreateResponse>>builder()
+                .result(bookService.getAllBook())
+               .build();
+     }
 }

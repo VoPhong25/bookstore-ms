@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,6 +40,10 @@ public class BookService {
         book.setImageUrl(imageUrl);
         bookRepository.save(book);
         return bookMapper.toBookCreateResponse(book);
+    }
+    public List<BookCreateResponse> getAllBook() {
+        return bookRepository.findAll().stream()
+                .map(bookMapper::toBookCreateResponse).toList();
     }
 
     // Phương thức lưu ảnh

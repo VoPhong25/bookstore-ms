@@ -8,9 +8,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +25,12 @@ public class CategoryController {
     ApiResponse<CategoryCreateResponse> createCategory(@RequestBody CategoryCreateRequest request) {
         return ApiResponse.<CategoryCreateResponse>builder()
                .result(categoryService.createCategory(request))
+               .build();
+    }
+    @GetMapping("/getAllCategory")
+    ApiResponse<List<CategoryCreateResponse>> getAllCategory() {
+        return ApiResponse.<List<CategoryCreateResponse>>builder()
+               .result(categoryService.getAllCategory())
                .build();
     }
 }
