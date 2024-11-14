@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,4 +48,38 @@ public class BookController {
                 .result(bookService.getAllBook())
                .build();
      }
+     @GetMapping("/getBookById/{id}")
+     ApiResponse<BookCreateResponse> getBookById(@PathVariable("id") int id) {
+        return ApiResponse.<BookCreateResponse>builder()
+               .result(bookService.getBookById(id))
+               .build();
+     }
+     @GetMapping("/getBookByCategoryId/{categoryId}")
+     ApiResponse<List<BookCreateResponse>> getBookByCategoryId(
+             @PathVariable("categoryId") int categoryId) {
+        return ApiResponse.<List<BookCreateResponse>>builder()
+                .result(bookService.getBookByCategoryId(categoryId))
+               .build();
+     }
+     @DeleteMapping("/deleteBook/{id}")
+     ApiResponse<String> deleteBook(@PathVariable int id) {
+        bookService.deleteBook(id);
+        return ApiResponse.<String>builder()
+               .result("Book has been deleted")
+               .build();
+     }
+
+    @PutMapping("/updateBook/{id}")
+    ApiResponse<BookCreateResponse> updateBook(
+            @PathVariable("id") int bookId,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("request") String requestJson) throws IOException {
+        // Chuyển JSON thành đối tượng BookCreateRequest
+        ObjectMapper objectMapper = new ObjectMapper();
+        BookCreateRequest request = objectMapper.readValue(requestJson, BookCreateRequest.class);
+
+        return ApiResponse.<BookCreateResponse>builder()
+                .result(bookService.updateBook(bookId, file, request))
+                .build();
+    }
 }

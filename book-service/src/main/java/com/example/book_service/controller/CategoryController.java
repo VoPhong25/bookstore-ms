@@ -8,10 +8,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +28,19 @@ public class CategoryController {
     ApiResponse<List<CategoryCreateResponse>> getAllCategory() {
         return ApiResponse.<List<CategoryCreateResponse>>builder()
                .result(categoryService.getAllCategory())
+               .build();
+    }
+    @DeleteMapping("/deleteCategory/{id}")
+    ApiResponse<String> deleteCategory(@PathVariable int id) {
+        categoryService.deleteCategory(id);
+        return ApiResponse.<String>builder()
+               .result("Category has been deleted")
+               .build();
+    }
+    @PutMapping("/updateCategory/{id}")
+    ApiResponse<CategoryCreateResponse> updateCategory(@PathVariable int id, @RequestBody CategoryCreateRequest request) {
+        return ApiResponse.<CategoryCreateResponse>builder()
+               .result(categoryService.updateCategory(id, request))
                .build();
     }
 }

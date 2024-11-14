@@ -23,14 +23,22 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINT= {"/addBook", "/createCategory"};
+    private final String[] PUBLIC_ENDPOINT= {"/addBook",
+            "/createCategory",
+            "/getAllBook",
+            "/getBookByCategoryId/**",
+            "/deleteBook/**",
+            "/updateCategory/**",
+            "/updateBook/**",
+
+    };
     @Value("${jwt.signerKey}")
     String signerKey;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.authorizeHttpRequests(request ->
                 // public endpoint, cho phep nguoi dung truy cap bth
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
+                request.requestMatchers(PUBLIC_ENDPOINT).permitAll()
                 .anyRequest().authenticated());
         httpSecurity.oauth2ResourceServer(oauth2 ->
                 oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())

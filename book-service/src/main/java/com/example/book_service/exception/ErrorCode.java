@@ -11,6 +11,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1006, "You not have permission", HttpStatus.FORBIDDEN),
     CATEGORY_NOT_FOUND(1003, "Category not found", HttpStatus.NOT_FOUND),
+    BOOK_NOT_FOUND(1004, "Book not found", HttpStatus.NOT_FOUND),
     ;
     private int code;
     private String message;
