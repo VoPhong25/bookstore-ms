@@ -51,12 +51,13 @@ public class AuthService {
                 .valid(verified && expivyTime.after(new Date()))
                 .build();
     }
+
     public AuthResponse authenticate(AuthRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         boolean authResponse = passwordEncoder.matches(request.getPassword(),
                 user.getPassword());
-        if(!authResponse)
+        if (!authResponse)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generrateToken(user);
         return AuthResponse.builder()
@@ -64,7 +65,8 @@ public class AuthService {
                 .authencated(true)
                 .build();
     }
-    private String generrateToken(User user){
+
+    private String generrateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -87,11 +89,19 @@ public class AuthService {
             throw new RuntimeException(e);
         }
     }
-//    tao scope ve role
+
+    //    tao scope ve role
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
+
         if (!CollectionUtils.isEmpty(user.getRoles()))
-            user.getRoles().forEach(s -> stringJoiner.add(s));
-            return stringJoiner.toString();
+            user.getRoles().forEach( role -> {
+                stringJoiner.add("ROLE_" + role.getName());
+
+                if (!CollectionUtils.isEmpty(role.getPermissions()))
+                    role.getPermissions().forEach(permission
+                            -> stringJoiner.add(permission.getName()));
+            });
+        return stringJoiner.toString();
     }
 }

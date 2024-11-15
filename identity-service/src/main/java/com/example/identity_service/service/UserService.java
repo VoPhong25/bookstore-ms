@@ -10,6 +10,7 @@ import com.example.identity_service.exception.AppException;
 import com.example.identity_service.exception.ErrorCode;
 import com.example.identity_service.mapper.ProfileMapper;
 import com.example.identity_service.mapper.UserMapper;
+import com.example.identity_service.repository.RoleRepository;
 import com.example.identity_service.repository.UserRepository;
 import com.example.identity_service.repository.httpclient.UserProfileClient;
 import lombok.AccessLevel;
@@ -38,30 +39,33 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     UserProfileClient userProfileClient;
     KafkaTemplate<String, Object> kafkaTemplate;
+    RoleRepository roleRepository;
     public UserResponse createUser(UserCreatRequest request) {
 
         if (userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
         User user = userMapper.toUser(request);
+
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         HashSet<String> roles = new HashSet<>();
         roles.add(Role.USER.name());
-        user.setRoles(roles);
+//        user.setRoles(roles);
         user = userRepository.save(user);
+
 
         var userProfileRequest = profileMapper.toUserProfileCreateRequest(request);
         userProfileRequest.setUserId(user.getId());
         userProfileRequest.setPassword(user.getPassword());
         userProfileClient.createUserProfile(userProfileRequest);
 
-        NotificationEvent notificationEvent = NotificationEvent.builder()
-                .channel("Email")
-                .recipient(request.getEmail())
-                .subject("Welcome to BookstoreVP")
-                .body("Hello, " + request.getUsername() )
-                .build();
+//        NotificationEvent notificationEvent = NotificationEvent.builder()
+//                .channel("Email")
+//                .recipient(request.getEmail())
+//                .subject("Welcome to BookstoreVP")
+//                .body("Hello, " + request.getUsername() )
+//                .build();
 //      gui mail bang kafka
-        kafkaTemplate.send("notification-delivery", notificationEvent);
+//        kafkaTemplate.send("notification-delivery", notificationEvent);
         return userMapper.toUserResponse(user);
     }
 
@@ -69,6 +73,9 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(()
                 -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userMapper.updateUser(user, request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
         return userMapper.toUserResponse(userRepository.save(user));
     }
     // lay ra thong tin cua user dang login
@@ -82,6 +89,8 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')") /* anotatinon dùng de kiem tra xem nguoi dung
     su dung method nay co ROLE la ADMIN khong */
+//    @PreAuthorize("hasAnyAuthority('CREATE_DATA')")
+    // anotation dung de kiem tra permission, neu co permission phu hop thi duoc truy cap
     public List<UserResponse> getAllUser() {
         log.info("in mothod getAllUser.");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
